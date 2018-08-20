@@ -41,7 +41,6 @@ class CardRecipeAdapter extends RecyclerView.Adapter <CardRecipeAdapter.CardReci
 
     private ArrayList<String> recipesList;
     private RecipeOnclickHandler mHandler;
-    private Context mContext;
 
     public void setRecipesList(ArrayList<String> recipesList) {
         this.recipesList = recipesList;
@@ -49,7 +48,6 @@ class CardRecipeAdapter extends RecyclerView.Adapter <CardRecipeAdapter.CardReci
 
     public CardRecipeAdapter(RecipeOnclickHandler handler, Context context){
         this.mHandler = handler;
-        this.mContext = context;
         this.recipesList = new ArrayList<>();
     }
 

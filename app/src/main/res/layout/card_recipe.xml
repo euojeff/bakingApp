@@ -20,9 +20,9 @@
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp"
             tools:text="Text"
+            android:paddingLeft="20dp"
             card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"/>
     </android.support.constraint.ConstraintLayout>
-
 </android.support.v7.widget.CardView>
