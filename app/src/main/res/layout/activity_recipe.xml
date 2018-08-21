@@ -6,4 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".RecipeActivity">
 
+    <FrameLayout
+        android:id="@+id/recipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"/>
+
 </android.support.constraint.ConstraintLayout>

@@ -11,13 +11,12 @@ import org.json.JSONException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Scanner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements CardRecipeAdapter.RecipeOnclickHandler{
+public class RecipeListActivity extends AppCompatActivity implements CardRecipeAdapter.RecipeOnclickHandler{
 
     private ArrayList<String> mRecipes;
 
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements CardRecipeAdapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_recipe_list);
 
         ButterKnife.bind(this);
 

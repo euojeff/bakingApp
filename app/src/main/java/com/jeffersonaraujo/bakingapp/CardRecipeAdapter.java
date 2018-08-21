@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.jeffersonaraujo.bakingapp.helper.RecipeHelper;
+import com.jeffersonaraujo.bakingapp.helper.RecipeJsonHelper;
 
 import org.json.JSONException;
 
@@ -60,7 +60,7 @@ class CardRecipeAdapter extends RecyclerView.Adapter <CardRecipeAdapter.CardReci
     public CardRecipeAdapter.CardRecipeHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View view = inflater.inflate(R.layout.card_recipe, viewGroup, false);
+        View view = inflater.inflate(R.layout.card_recipe_list, viewGroup, false);
 
         return new CardRecipeAdapter.CardRecipeHolder(view);
     }
@@ -70,7 +70,7 @@ class CardRecipeAdapter extends RecyclerView.Adapter <CardRecipeAdapter.CardReci
 
         try {
 
-            RecipeHelper recipe = new RecipeHelper(recipesList.get(i));
+            RecipeJsonHelper recipe = new RecipeJsonHelper(recipesList.get(i));
 
             holder.mCard.setOnClickListener(new View.OnClickListener() {
                 @Override
