@@ -16,7 +16,7 @@ import java.util.Scanner;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecipeListActivity extends AppCompatActivity implements CardRecipeAdapter.RecipeOnclickHandler{
+public class RecipeListActivity extends AppCompatActivity implements CardRecipeListAdapter.RecipeOnclickHandler{
 
     private ArrayList<String> mRecipes;
 
@@ -24,7 +24,6 @@ public class RecipeListActivity extends AppCompatActivity implements CardRecipeA
 
     @BindView(R.id.recycler_recipes)
     RecyclerView mRecyclerRecipes;
-    CardRecipeAdapter mAdapter;
 
 
     @Override
@@ -46,7 +45,7 @@ public class RecipeListActivity extends AppCompatActivity implements CardRecipeA
         LinearLayoutManager lm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerRecipes.setLayoutManager(lm);
 
-        mAdapter = new CardRecipeAdapter(this, this);
+        CardRecipeListAdapter mAdapter = new CardRecipeListAdapter(this, this);
         mRecyclerRecipes.setAdapter(mAdapter);
 
         mAdapter.setRecipesList(mRecipes);
@@ -90,8 +89,8 @@ public class RecipeListActivity extends AppCompatActivity implements CardRecipeA
 
     @Override
     public void onCardClick(String json) {
-        Intent intent = new Intent(this, RecipeActivity.class);
-        intent.putExtra(RecipeActivity.BUNDLE_JSON_RECIPE, json);
+        Intent intent = new Intent(this, InstructionsActivity.class);
+        intent.putExtra(InstructionsActivity.BUNDLE_JSON_RECIPE, json);
 
         startActivity(intent);
     }

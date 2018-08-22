@@ -5,14 +5,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class RecipeActivity extends AppCompatActivity implements InstructionsFragment.OnFragmentInteractionListener{
+public class InstructionsActivity extends AppCompatActivity implements InstructionsFragment.OnFragmentInteractionListener{
 
     public static final String BUNDLE_JSON_RECIPE = "json_recipe";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe);
+        setContentView(R.layout.activity_instructions);
 
 
         if(savedInstanceState == null){

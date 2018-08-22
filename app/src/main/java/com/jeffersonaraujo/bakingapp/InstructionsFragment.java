@@ -3,7 +3,10 @@ package com.jeffersonaraujo.bakingapp;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import org.json.JSONException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 
 /**
@@ -26,7 +30,7 @@ import butterknife.ButterKnife;
  * Use the {@link InstructionsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InstructionsFragment extends Fragment {
+public class InstructionsFragment extends Fragment implements CardInstructionsAdapter.RecipeOnclickHandler {
 
     private static final String ARG_JSON = "ARG_JSON";
 
@@ -34,8 +38,12 @@ public class InstructionsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    @BindView(R.id.instruction_tv)
-    public TextView mInstructionsTv;
+    private Unbinder mUnbinder;
+
+    @BindView(R.id.ingredients_instruction_tv)
+    public TextView mIngredientsTv;
+    @BindView(R.id.instructions_recycle)
+    public RecyclerView mInstructionsRV;
 
     public InstructionsFragment() {
         // Required empty public constructor
@@ -73,19 +81,37 @@ public class InstructionsFragment extends Fragment {
     private void populateUi(){
 
         for(IngredientJsonHelper ingredient: mDataHelper.getIngredients()){
-            mInstructionsTv.setText( mInstructionsTv.getText() + ingredient.getFormatedString() + "\n");
+            mIngredientsTv.setText( mIngredientsTv.getText() + ingredient.getFormatedString() + "\n");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_instructions, container, false);
-
-        ButterKnife.bind(this, view);
+        mUnbinder = ButterKnife.bind(this, view);
 
         populateUi();
+        configRecycler();
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
+    }
+
+    private void configRecycler(){
+
+        LinearLayoutManager lm = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.VERTICAL, false);
+        mInstructionsRV.setLayoutManager(lm);
+
+        CardInstructionsAdapter mAdapter = new CardInstructionsAdapter(this);
+        mInstructionsRV.setAdapter(mAdapter);
+
+        mAdapter.setRecipesList(mDataHelper.getSteps());
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -103,6 +129,11 @@ public class InstructionsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onCardClick(String jsonFilme) {
+
     }
 
     public interface OnFragmentInteractionListener {

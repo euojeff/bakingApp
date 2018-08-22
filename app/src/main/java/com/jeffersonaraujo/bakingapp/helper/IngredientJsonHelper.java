@@ -5,25 +5,25 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class IngredientsHelper implements Serializable{
+public class IngredientJsonHelper extends JsonHelper{
 
-    private JSONObject mJson;
-
-    public IngredientsHelper(String json) throws JSONException {
-        mJson = new JSONObject(json);
+    public IngredientJsonHelper(String json) throws JSONException {
+        super(json);
     }
 
-    public String getName(){
-
-        String name = "";
-
-        try {
-            name = mJson.getString("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return name;
+    public String getFormatedString(){
+        return getQuantity() + " " + getMeasure() + " " + getIngredient();
     }
 
+    public String getQuantity(){
+        return getString("quantity");
+    }
+
+    public String getMeasure(){
+        return getString("measure");
+    }
+
+    public String getIngredient(){
+        return getString("ingredient");
+    }
 }

@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 /**
  * Created by jeff on 15/08/2018.
  */
-class CardRecipeAdapter extends RecyclerView.Adapter <CardRecipeAdapter.CardRecipeHolder> {
+class CardRecipeListAdapter extends RecyclerView.Adapter <CardRecipeListAdapter.CardRecipeHolder> {
 
     static class CardRecipeHolder extends RecyclerView.ViewHolder {
 
@@ -46,7 +46,7 @@ class CardRecipeAdapter extends RecyclerView.Adapter <CardRecipeAdapter.CardReci
         this.recipesList = recipesList;
     }
 
-    public CardRecipeAdapter(RecipeOnclickHandler handler, Context context){
+    public CardRecipeListAdapter(RecipeOnclickHandler handler, Context context){
         this.mHandler = handler;
         this.recipesList = new ArrayList<>();
     }
@@ -57,16 +57,16 @@ class CardRecipeAdapter extends RecyclerView.Adapter <CardRecipeAdapter.CardReci
     }
 
     @Override
-    public CardRecipeAdapter.CardRecipeHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public CardRecipeListAdapter.CardRecipeHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View view = inflater.inflate(R.layout.card_recipe_list, viewGroup, false);
 
-        return new CardRecipeAdapter.CardRecipeHolder(view);
+        return new CardRecipeListAdapter.CardRecipeHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(CardRecipeAdapter.CardRecipeHolder holder, final int i) {
+    public void onBindViewHolder(CardRecipeListAdapter.CardRecipeHolder holder, final int i) {
 
         try {
 
