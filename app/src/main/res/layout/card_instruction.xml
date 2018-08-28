@@ -16,7 +16,7 @@
             android:id="@+id/instruction_card_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="18sp"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp"
             tools:text="Text"

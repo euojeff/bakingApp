@@ -7,7 +7,7 @@
     tools:context=".InstructionsActivity">
 
     <FrameLayout
-        android:id="@+id/instructions_container"
+        android:id="@+id/instruction_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerInside"/>

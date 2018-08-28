@@ -25,7 +25,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link InstructionsFragment.OnFragmentInteractionListener} interface
+ * {@link OnInstructionInteractionListener} interface
  * to handle interaction events.
  * Use the {@link InstructionsFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -36,7 +36,7 @@ public class InstructionsFragment extends Fragment implements CardInstructionsAd
 
     private RecipeJsonHelper mDataHelper;
 
-    private OnFragmentInteractionListener mListener;
+    private OnInstructionInteractionListener mListener;
 
     private Unbinder mUnbinder;
 
@@ -117,8 +117,8 @@ public class InstructionsFragment extends Fragment implements CardInstructionsAd
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnInstructionInteractionListener) {
+            mListener = (OnInstructionInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -132,17 +132,13 @@ public class InstructionsFragment extends Fragment implements CardInstructionsAd
     }
 
     @Override
-    public void onCardClick(String jsonFilme) {
-
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
-
-    public void onButtonPressed(Uri uri) {
+    public void onCardClick(String json) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onInstructionSelected(json);
         }
+    }
+
+    public interface OnInstructionInteractionListener {
+        void onInstructionSelected(String json);
     }
 }
