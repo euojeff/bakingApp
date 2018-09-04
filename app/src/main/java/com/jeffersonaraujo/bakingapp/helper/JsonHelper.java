@@ -29,4 +29,9 @@ public class JsonHelper{
 
         return atr;
     }
+
+    @Override
+    public String toString() {
+        return mJson.toString();
+    }
 }

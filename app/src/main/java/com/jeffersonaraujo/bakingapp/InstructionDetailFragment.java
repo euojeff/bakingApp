@@ -7,11 +7,27 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.TransferListener;
+import com.google.android.exoplayer2.util.Util;
 import com.jeffersonaraujo.bakingapp.helper.StepJsonHelper;
 
 import org.json.JSONException;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -26,10 +42,21 @@ import butterknife.Unbinder;
 public class InstructionDetailFragment extends Fragment {
     private static final String ARG_JSON = "ARG_JSON";
 
-    private StepJsonHelper dataHelper;
+    private StepJsonHelper mDataHelper;
     private Unbinder mUnbinder;
 
+    private SimpleExoPlayer player;
+    private DefaultTrackSelector trackSelector;
+    private BandwidthMeter bandwidthMeter;
+    private DataSource.Factory mediaDataSourceFactory;
+
     private OnInstructionDetailInteractionListener mListener;
+
+    @BindView(R.id.instruction_detail_tv)
+    TextView instructionDetailsTV;
+
+    @BindView(R.id.video_exoplayer_view)
+    PlayerView mPlayerView;
 
     public InstructionDetailFragment() {
         // Required empty public constructor
@@ -55,7 +82,7 @@ public class InstructionDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             try {
-                dataHelper = new StepJsonHelper(getArguments().getString(ARG_JSON));
+                mDataHelper = new StepJsonHelper(getArguments().getString(ARG_JSON));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -69,8 +96,52 @@ public class InstructionDetailFragment extends Fragment {
 
         mUnbinder = ButterKnife.bind(this, view);
 
+        instructionDetailsTV.setText(mDataHelper.getDescription());
+
+        bandwidthMeter = new DefaultBandwidthMeter();
+        mediaDataSourceFactory = new DefaultDataSourceFactory(view.getContext(),
+                Util.getUserAgent(view.getContext(), "mediaPlayerSample"), (TransferListener<? super DataSource>) bandwidthMeter);
+
+        initializePlayer(view, mDataHelper.getVideoURL());
+
         return view;
     }
+
+    private void initializePlayer(View view, String url) {
+
+        mPlayerView.requestFocus();
+
+        TrackSelection.Factory videoTrackSelectionFactory =
+                new AdaptiveTrackSelection.Factory(bandwidthMeter);
+
+        trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+
+        player = ExoPlayerFactory.newSimpleInstance(view.getContext(), trackSelector);
+
+        mPlayerView.setPlayer(player);
+
+        player.setPlayWhenReady(true);
+
+
+        MediaSource mediaSource = new ExtractorMediaSource.Factory(mediaDataSourceFactory)
+                .createMediaSource(Uri.parse(url));
+
+        /**boolean haveStartPosition = currentWindow != C.INDEX_UNSET;
+        if (haveStartPosition) {
+            player.seekTo(currentWindow, playbackPosition);
+        }**/
+
+        player.prepare(mediaSource, true, false);
+
+        /**ivHideControllerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPlayerView.hideController();
+            }
+        });**/
+    }
+
+
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -99,6 +170,7 @@ public class InstructionDetailFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+        player.release();
     }
 
     public interface OnInstructionDetailInteractionListener {
