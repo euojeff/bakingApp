@@ -102,14 +102,23 @@ public class InstructionDetailFragment extends Fragment {
         mediaDataSourceFactory = new DefaultDataSourceFactory(view.getContext(),
                 Util.getUserAgent(view.getContext(), "mediaPlayerSample"), (TransferListener<? super DataSource>) bandwidthMeter);
 
-        initializePlayer(view, mDataHelper.getVideoURL());
+        if(mDataHelper.getVideoURL() != null
+                && !mDataHelper.getVideoURL().trim().equals("")){
+            initializePlayer(view, mDataHelper.getVideoURL());
+        }else{
+            mPlayerView.setVisibility(View.GONE);
+        };
 
         return view;
     }
 
+    /**
+     *
+     *
+     * @param view
+     * @param url
+     */
     private void initializePlayer(View view, String url) {
-
-        mPlayerView.requestFocus();
 
         TrackSelection.Factory videoTrackSelectionFactory =
                 new AdaptiveTrackSelection.Factory(bandwidthMeter);
@@ -126,19 +135,8 @@ public class InstructionDetailFragment extends Fragment {
         MediaSource mediaSource = new ExtractorMediaSource.Factory(mediaDataSourceFactory)
                 .createMediaSource(Uri.parse(url));
 
-        /**boolean haveStartPosition = currentWindow != C.INDEX_UNSET;
-        if (haveStartPosition) {
-            player.seekTo(currentWindow, playbackPosition);
-        }**/
-
         player.prepare(mediaSource, true, false);
 
-        /**ivHideControllerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPlayerView.hideController();
-            }
-        });**/
     }
 
 
@@ -170,7 +168,9 @@ public class InstructionDetailFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
-        player.release();
+        if(player != null){
+            player.release();
+        }
     }
 
     public interface OnInstructionDetailInteractionListener {
