@@ -29,6 +29,7 @@ import org.json.JSONException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -112,6 +113,20 @@ public class InstructionDetailFragment extends Fragment {
         return view;
     }
 
+    @OnClick(R.id.btn_previous)
+    public void clickPrevious(){
+        if(mListener != null){
+            mListener.onClickPrevious();
+        }
+    }
+
+    @OnClick(R.id.btn_next)
+    public void clickNext(){
+        if(mListener != null){
+            mListener.onClickNext();
+        }
+    }
+
     /**
      *
      *
@@ -140,13 +155,6 @@ public class InstructionDetailFragment extends Fragment {
     }
 
 
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction();
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -174,6 +182,7 @@ public class InstructionDetailFragment extends Fragment {
     }
 
     public interface OnInstructionDetailInteractionListener {
-        void onFragmentInteraction();
+        void onClickPrevious();
+        void onClickNext();
     }
 }

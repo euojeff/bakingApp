@@ -1,5 +1,6 @@
 package com.jeffersonaraujo.bakingapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,6 +12,9 @@ import android.view.View;
 public class InstructionDetailActivity extends AppCompatActivity
         implements InstructionDetailFragment.OnInstructionDetailInteractionListener {
 
+    private Boolean mHasNext;
+    private Boolean mHasPrevious;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +24,10 @@ public class InstructionDetailActivity extends AppCompatActivity
 
             InstructionDetailFragment instructionDetailFragment = InstructionDetailFragment
                     .newInstance(getIntent().getStringExtra(InstructionsActivity.BUNDLE_JSON_RECIPE));
+
+            mHasNext = getIntent().getBooleanExtra(InstructionsActivity.BUNDLE_HAS_NEXT, Boolean.FALSE);
+
+            mHasPrevious = getIntent().getBooleanExtra(InstructionsActivity.BUNDLE_HAS_PREVIOUS, Boolean.FALSE);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -31,7 +39,22 @@ public class InstructionDetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction() {
+    public void onClickNext() {
+        if(mHasNext){
+            Intent data = new Intent();
+            data.putExtra(InstructionsActivity.RESULT_CLICK, InstructionsActivity.RESULT_CLICK_NEXT);
+            setResult(RESULT_OK, data);
+            this.finish();
+        }
+    }
 
+    @Override
+    public void onClickPrevious() {
+        if(mHasPrevious){
+            Intent data = new Intent();
+            data.putExtra(InstructionsActivity.RESULT_CLICK, InstructionsActivity.RESULT_CLICK_PREVIOUS);
+            setResult(RESULT_OK, data);
+            this.finish();
+        }
     }
 }

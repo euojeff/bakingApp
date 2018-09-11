@@ -132,13 +132,13 @@ public class InstructionsFragment extends Fragment implements CardInstructionsAd
     }
 
     @Override
-    public void onCardClick(String json) {
+    public void onCardClick(int index) {
         if (mListener != null) {
-            mListener.onInstructionSelected(json);
+            mListener.onStepSelected(index);
         }
     }
 
     public interface OnInstructionInteractionListener {
-        void onInstructionSelected(String json);
+        void onStepSelected(int index);
     }
 }

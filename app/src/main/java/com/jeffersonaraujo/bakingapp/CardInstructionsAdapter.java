@@ -40,7 +40,7 @@ class CardInstructionsAdapter extends RecyclerView.Adapter <CardInstructionsAdap
     }
 
     public interface RecipeOnclickHandler {
-        void onCardClick(String jsonFilme);
+        void onCardClick(int index);
     }
 
     public void setRecipesList(ArrayList<StepJsonHelper> mStepsList) {
@@ -72,7 +72,7 @@ class CardInstructionsAdapter extends RecyclerView.Adapter <CardInstructionsAdap
         holder.mCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mHandler.onCardClick(mStepsList.get(i).toString());
+                mHandler.onCardClick(i);
             }
         });
 
