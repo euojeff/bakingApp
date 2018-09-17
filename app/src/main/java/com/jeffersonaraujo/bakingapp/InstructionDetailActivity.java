@@ -25,17 +25,15 @@ public class InstructionDetailActivity extends AppCompatActivity
             InstructionDetailFragment instructionDetailFragment = InstructionDetailFragment
                     .newInstance(getIntent().getStringExtra(InstructionsActivity.BUNDLE_JSON_RECIPE));
 
-            mHasNext = getIntent().getBooleanExtra(InstructionsActivity.BUNDLE_HAS_NEXT, Boolean.FALSE);
-
-            mHasPrevious = getIntent().getBooleanExtra(InstructionsActivity.BUNDLE_HAS_PREVIOUS, Boolean.FALSE);
-
             FragmentManager fragmentManager = getSupportFragmentManager();
 
             fragmentManager.beginTransaction()
                     .add(R.id.instruction_detail_container, instructionDetailFragment)
                     .commit();
-
         }
+
+        mHasNext = getIntent().getBooleanExtra(InstructionsActivity.BUNDLE_HAS_NEXT, Boolean.FALSE);
+        mHasPrevious = getIntent().getBooleanExtra(InstructionsActivity.BUNDLE_HAS_PREVIOUS, Boolean.FALSE);
     }
 
     @Override

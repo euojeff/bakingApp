@@ -24,9 +24,18 @@ public class InstructionsActivity extends AppCompatActivity
     public static final String RESULT_CLICK_PREVIOUS = "previous";
     public static final String RESULT_CLICK = "RESULT_CLICK";
 
+    private static final String SAVED_SELECTED_ITEM = "SAVED_SELECTED_ITEM";
+
     private List<StepJsonHelper> mStepList = null;
 
     private int mSelectedItem = -1;
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(SAVED_SELECTED_ITEM, mSelectedItem);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +48,21 @@ public class InstructionsActivity extends AppCompatActivity
             InstructionsFragment instructionsFragment = InstructionsFragment
                     .newInstance(getIntent().getStringExtra(BUNDLE_JSON_RECIPE));
 
-            try {
-                mStepList = new RecipeJsonHelper(getIntent().getStringExtra(BUNDLE_JSON_RECIPE)).getSteps();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
             FragmentManager fragmentManager = getSupportFragmentManager();
 
             fragmentManager.beginTransaction()
                     .add(R.id.instructions_container, instructionsFragment)
                     .commit();
 
+        }else{
+
+            mSelectedItem = savedInstanceState.getInt(SAVED_SELECTED_ITEM, -1);
+        }
+
+        try {
+            mStepList = new RecipeJsonHelper(getIntent().getStringExtra(BUNDLE_JSON_RECIPE)).getSteps();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
