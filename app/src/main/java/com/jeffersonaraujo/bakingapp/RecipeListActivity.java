@@ -3,8 +3,10 @@ package com.jeffersonaraujo.bakingapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.GridLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +24,8 @@ public class RecipeListActivity extends AppCompatActivity implements CardRecipeL
 
     private static String SAVED_DATA = "SAVED_DATA";
 
+    private Boolean isTablet = false;
+
     @BindView(R.id.recycler_recipes)
     RecyclerView mRecyclerRecipes;
 
@@ -33,6 +37,8 @@ public class RecipeListActivity extends AppCompatActivity implements CardRecipeL
 
         ButterKnife.bind(this);
 
+        isTablet = getResources().getBoolean(R.bool.isTablet);
+
         this.loadRecipes(savedInstanceState);
 
         this.configRecycler();
@@ -42,7 +48,14 @@ public class RecipeListActivity extends AppCompatActivity implements CardRecipeL
 
     private void configRecycler(){
 
-        LinearLayoutManager lm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager lm = null;
+
+        if(isTablet){
+             lm = new GridLayoutManager(this, 4);
+        }else{
+            lm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        }
+
         mRecyclerRecipes.setLayoutManager(lm);
 
         CardRecipeListAdapter mAdapter = new CardRecipeListAdapter(this, this);
