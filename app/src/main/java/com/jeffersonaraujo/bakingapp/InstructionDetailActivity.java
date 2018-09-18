@@ -23,7 +23,7 @@ public class InstructionDetailActivity extends AppCompatActivity
         if(savedInstanceState == null){
 
             InstructionDetailFragment instructionDetailFragment = InstructionDetailFragment
-                    .newInstance(getIntent().getStringExtra(InstructionsActivity.BUNDLE_JSON_RECIPE));
+                    .newInstance(getIntent().getStringExtra(InstructionsActivity.BUNDLE_JSON_STEP));
 
             FragmentManager fragmentManager = getSupportFragmentManager();
 

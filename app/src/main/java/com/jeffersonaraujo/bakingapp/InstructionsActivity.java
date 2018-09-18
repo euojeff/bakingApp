@@ -14,9 +14,10 @@ import org.json.JSONException;
 import java.util.List;
 
 public class InstructionsActivity extends AppCompatActivity
-        implements InstructionsFragment.OnInstructionInteractionListener{
+        implements InstructionsFragment.OnInstructionInteractionListener, InstructionDetailFragment.OnInstructionDetailInteractionListener {
 
     public static final String BUNDLE_JSON_RECIPE = "json_recipe";
+    public static final String BUNDLE_JSON_STEP = "json_STEP";
     public static final String BUNDLE_HAS_PREVIOUS = "BUNDLE_HAS_PREVIOUS";
     public static final String BUNDLE_HAS_NEXT = "BUNDLE_HAS_NEXT";
 
@@ -30,6 +31,8 @@ public class InstructionsActivity extends AppCompatActivity
 
     private int mSelectedItem = -1;
 
+    private Boolean isTablet = false;
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -42,27 +45,48 @@ public class InstructionsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructions);
 
-
-        if(savedInstanceState == null){
-
-            InstructionsFragment instructionsFragment = InstructionsFragment
-                    .newInstance(getIntent().getStringExtra(BUNDLE_JSON_RECIPE));
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-
-            fragmentManager.beginTransaction()
-                    .add(R.id.instructions_container, instructionsFragment)
-                    .commit();
-
-        }else{
-
-            mSelectedItem = savedInstanceState.getInt(SAVED_SELECTED_ITEM, -1);
-        }
+        isTablet = getResources().getBoolean(R.bool.isTablet);
 
         try {
             mStepList = new RecipeJsonHelper(getIntent().getStringExtra(BUNDLE_JSON_RECIPE)).getSteps();
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+
+        if(savedInstanceState == null){
+
+            this.loadInstructionsFragment();
+
+            if(isTablet){
+                this.loadDetailFragment();
+            }
+
+        }else{
+
+            mSelectedItem = savedInstanceState.getInt(SAVED_SELECTED_ITEM, -1);
+        }
+    }
+
+    private void loadInstructionsFragment(){
+        InstructionsFragment instructionsFragment = InstructionsFragment
+                .newInstance(getIntent().getStringExtra(BUNDLE_JSON_RECIPE));
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.instructions_container, instructionsFragment)
+                .commit();
+    }
+
+    private void loadDetailFragment(){
+
+        if(mStepList != null
+            && !mStepList.isEmpty()){
+
+            InstructionDetailFragment instructionDetailFragment = InstructionDetailFragment
+                    .newInstance(mStepList.get(0).toString());
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.instruction_detail_container, instructionDetailFragment)
+                    .commit();
         }
     }
 
@@ -70,14 +94,25 @@ public class InstructionsActivity extends AppCompatActivity
     public void onStepSelected(int i) {
 
         if(mStepList != null){
-            Intent intent = new Intent(this, InstructionDetailActivity.class);
-            intent.putExtra(InstructionsActivity.BUNDLE_JSON_RECIPE, mStepList.get(i).toString());
-            intent.putExtra(InstructionsActivity.BUNDLE_HAS_PREVIOUS, i != 0 ? true : false);
-            intent.putExtra(InstructionsActivity.BUNDLE_HAS_NEXT, i < mStepList.size() - 1 ? true : false);
+            if(isTablet){
+
+                InstructionDetailFragment instructionDetailFragment = InstructionDetailFragment
+                        .newInstance(mStepList.get(i).toString());
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.instruction_detail_container, instructionDetailFragment)
+                        .commit();
+
+            }else{
+                Intent intent = new Intent(this, InstructionDetailActivity.class);
+                intent.putExtra(InstructionsActivity.BUNDLE_JSON_STEP, mStepList.get(i).toString());
+                intent.putExtra(InstructionsActivity.BUNDLE_HAS_PREVIOUS, i != 0 ? true : false);
+                intent.putExtra(InstructionsActivity.BUNDLE_HAS_NEXT, i < mStepList.size() - 1 ? true : false);
+
+                startActivityForResult(intent, 1);
+            }
 
             mSelectedItem = i;
-
-            startActivityForResult(intent, 1);
         }
     }
 
@@ -99,5 +134,15 @@ public class InstructionsActivity extends AppCompatActivity
 
             }
         }
+    }
+
+    @Override
+    public void onClickPrevious() {
+        // Do nothing
+    }
+
+    @Override
+    public void onClickNext() {
+        // Do nothing
     }
 }

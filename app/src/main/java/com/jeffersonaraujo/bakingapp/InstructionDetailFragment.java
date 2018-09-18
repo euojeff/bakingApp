@@ -53,6 +53,13 @@ public class InstructionDetailFragment extends Fragment {
 
     private OnInstructionDetailInteractionListener mListener;
 
+    private Boolean isTablet = false;
+
+    @BindView(R.id.btn_previous)
+    View btPreview;
+    @BindView(R.id.btn_next)
+    View btNext;
+
     @BindView(R.id.instruction_detail_tv)
     TextView instructionDetailsTV;
 
@@ -81,6 +88,9 @@ public class InstructionDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        isTablet = getResources().getBoolean(R.bool.isTablet);
+
         if (getArguments() != null) {
             try {
                 mDataHelper = new StepJsonHelper(getArguments().getString(ARG_JSON));
@@ -109,6 +119,11 @@ public class InstructionDetailFragment extends Fragment {
         }else{
             mPlayerView.setVisibility(View.GONE);
         };
+
+        if(isTablet){
+            btNext.setVisibility(View.GONE);
+            btPreview.setVisibility(View.GONE);
+        }
 
         return view;
     }
