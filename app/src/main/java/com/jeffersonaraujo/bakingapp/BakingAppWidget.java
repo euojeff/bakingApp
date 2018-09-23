@@ -19,17 +19,22 @@ public class BakingAppWidget extends AppWidgetProvider {
                                 int appWidgetId, RecipeJsonHelper helper) {
 
         StringBuilder sb = new StringBuilder();
+        Intent intent = null;
 
         if(helper != null){
             for(IngredientJsonHelper ingredient: helper.getIngredients()){
                 sb.append(ingredient.getFormatedString() + "\n");
             }
+            intent = new Intent(context, InstructionsActivity.class);
+            intent.putExtra(InstructionsActivity.EXTRA_JSON_RECIPE, helper.toString());
+        }else{
+            intent = new Intent(context, RecipeListActivity.class);
         }
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
         views.setTextViewText(R.id.appwidget_text, sb);
 
-        Intent intent = new Intent(context, RecipeListActivity.class);
+        intent.putExtra(InstructionsActivity.EXTRA_FROM_WIDGET,true);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);

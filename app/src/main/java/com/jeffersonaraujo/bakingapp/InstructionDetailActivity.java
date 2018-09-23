@@ -2,12 +2,8 @@ package com.jeffersonaraujo.bakingapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 public class InstructionDetailActivity extends AppCompatActivity
         implements InstructionDetailFragment.OnInstructionDetailInteractionListener {
@@ -23,7 +19,7 @@ public class InstructionDetailActivity extends AppCompatActivity
         if(savedInstanceState == null){
 
             InstructionDetailFragment instructionDetailFragment = InstructionDetailFragment
-                    .newInstance(getIntent().getStringExtra(InstructionsActivity.BUNDLE_JSON_STEP));
+                    .newInstance(getIntent().getStringExtra(InstructionsActivity.EXTRA_JSON_STEP));
 
             FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -32,8 +28,8 @@ public class InstructionDetailActivity extends AppCompatActivity
                     .commit();
         }
 
-        mHasNext = getIntent().getBooleanExtra(InstructionsActivity.BUNDLE_HAS_NEXT, Boolean.FALSE);
-        mHasPrevious = getIntent().getBooleanExtra(InstructionsActivity.BUNDLE_HAS_PREVIOUS, Boolean.FALSE);
+        mHasNext = getIntent().getBooleanExtra(InstructionsActivity.EXTRA_HAS_NEXT, Boolean.FALSE);
+        mHasPrevious = getIntent().getBooleanExtra(InstructionsActivity.EXTRA_HAS_PREVIOUS, Boolean.FALSE);
     }
 
     @Override

@@ -75,14 +75,17 @@ public class WidgetService extends IntentService {
     private void handleActionUpdateWidgets() {
 
         RecipeEntry recipe = mDb.recipeDao().loadSelectedRecipe();
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, BakingAppWidget.class));
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.appwidget_text);
 
-        try {
-            BakingAppWidget.updateAppWidgets(this, appWidgetManager, appWidgetIds, new RecipeJsonHelper(recipe.getJson()));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(recipe != null){
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, BakingAppWidget.class));
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.appwidget_text);
+
+            try {
+                BakingAppWidget.updateAppWidgets(this, appWidgetManager, appWidgetIds, new RecipeJsonHelper(recipe.getJson()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

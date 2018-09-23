@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -20,16 +19,18 @@ import java.util.List;
 public class InstructionsActivity extends AppCompatActivity
         implements InstructionsFragment.OnInstructionInteractionListener, InstructionDetailFragment.OnInstructionDetailInteractionListener {
 
-    public static final String BUNDLE_JSON_RECIPE = "json_recipe";
-    public static final String BUNDLE_JSON_STEP = "json_STEP";
-    public static final String BUNDLE_HAS_PREVIOUS = "BUNDLE_HAS_PREVIOUS";
-    public static final String BUNDLE_HAS_NEXT = "BUNDLE_HAS_NEXT";
+    public static final String EXTRA_JSON_RECIPE = "json_recipe";
+    public static final String EXTRA_JSON_STEP = "json_STEP";
+    public static final String EXTRA_HAS_PREVIOUS = "BUNDLE_HAS_PREVIOUS";
+    public static final String EXTRA_HAS_NEXT = "BUNDLE_HAS_NEXT";
 
     public static final String RESULT_CLICK_NEXT = "next";
     public static final String RESULT_CLICK_PREVIOUS = "previous";
     public static final String RESULT_CLICK = "RESULT_CLICK";
 
     private static final String SAVED_SELECTED_ITEM = "SAVED_SELECTED_ITEM";
+
+    public static String EXTRA_FROM_WIDGET = "FROM_WIDGET";
 
     private List<StepJsonHelper> mStepList = null;
 
@@ -42,19 +43,22 @@ public class InstructionsActivity extends AppCompatActivity
 
     private void updateWidget(String json){
 
-        new AsyncTask<RecipeEntry, Void, Void>(){
-            @Override
-            protected Void doInBackground(RecipeEntry... recipe) {
-                mDb.recipeDao().clean();
-                mDb.recipeDao().insertRecipe(recipe[0]);
-                return null;
-            }
+        if(getIntent() == null
+                || !getIntent().getBooleanExtra(EXTRA_FROM_WIDGET, false)){
+            new AsyncTask<RecipeEntry, Void, Void>(){
+                @Override
+                protected Void doInBackground(RecipeEntry... recipe) {
+                    mDb.recipeDao().clean();
+                    mDb.recipeDao().insertRecipe(recipe[0]);
+                    return null;
+                }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                WidgetService.startActionUpdateWidget(mContext);
-            }
-        }.execute(new RecipeEntry(json));
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    WidgetService.startActionUpdateWidget(mContext);
+                }
+            }.execute(new RecipeEntry(json));
+        }
     }
 
     @Override
@@ -73,7 +77,7 @@ public class InstructionsActivity extends AppCompatActivity
         mDb = AppDatabase.getInstance(this);
 
         isTablet = getResources().getBoolean(R.bool.isTablet);
-        String recipeJson = getIntent().getStringExtra(BUNDLE_JSON_RECIPE);
+        String recipeJson = getIntent().getStringExtra(EXTRA_JSON_RECIPE);
 
         try {
             mStepList = new RecipeJsonHelper(recipeJson).getSteps();
@@ -99,7 +103,7 @@ public class InstructionsActivity extends AppCompatActivity
 
     private void loadInstructionsFragment(){
         InstructionsFragment instructionsFragment = InstructionsFragment
-                .newInstance(getIntent().getStringExtra(BUNDLE_JSON_RECIPE));
+                .newInstance(getIntent().getStringExtra(EXTRA_JSON_RECIPE));
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.instructions_container, instructionsFragment)
@@ -135,9 +139,9 @@ public class InstructionsActivity extends AppCompatActivity
 
             }else{
                 Intent intent = new Intent(this, InstructionDetailActivity.class);
-                intent.putExtra(InstructionsActivity.BUNDLE_JSON_STEP, mStepList.get(i).toString());
-                intent.putExtra(InstructionsActivity.BUNDLE_HAS_PREVIOUS, i != 0 ? true : false);
-                intent.putExtra(InstructionsActivity.BUNDLE_HAS_NEXT, i < mStepList.size() - 1 ? true : false);
+                intent.putExtra(InstructionsActivity.EXTRA_JSON_STEP, mStepList.get(i).toString());
+                intent.putExtra(InstructionsActivity.EXTRA_HAS_PREVIOUS, i != 0 ? true : false);
+                intent.putExtra(InstructionsActivity.EXTRA_HAS_NEXT, i < mStepList.size() - 1 ? true : false);
 
                 startActivityForResult(intent, 1);
             }

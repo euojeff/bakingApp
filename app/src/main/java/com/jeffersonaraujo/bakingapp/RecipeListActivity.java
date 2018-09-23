@@ -2,16 +2,13 @@ package com.jeffersonaraujo.bakingapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.GridLayout;
 
 import com.jeffersonaraujo.bakingapp.database.AppDatabase;
-import com.jeffersonaraujo.bakingapp.database.RecipeEntry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +25,8 @@ public class RecipeListActivity extends AppCompatActivity implements CardRecipeL
     private ArrayList<String> mRecipes;
 
     private static String SAVED_DATA = "SAVED_DATA";
+
+    private boolean fromWidget = false;
 
     private Boolean isTablet = false;
 
@@ -54,9 +53,22 @@ public class RecipeListActivity extends AppCompatActivity implements CardRecipeL
         this.loadRecipes(savedInstanceState);
 
         this.configRecycler();
-
-
+//        this.openInstructionsIfFromWidget();
     }
+
+//    private void openInstructionsIfFromWidget(){
+//        if(getIntent() != null
+//                && getIntent().getBooleanExtra(EXTRA_FROM_WIDGET, false)){
+//            mDb.recipeDao().loadSelectedRecipeLiveData().observe(this, new Observer<RecipeEntry>() {
+//                @Override
+//                public void onChanged(@Nullable RecipeEntry recipeEntry) {
+//                    if(recipeEntry != null){
+//                        onCardClick(recipeEntry.getJson());
+//                    }
+//                }
+//            });
+//        }
+//    }
 
     private void configRecycler(){
 
@@ -115,7 +127,7 @@ public class RecipeListActivity extends AppCompatActivity implements CardRecipeL
     @Override
     public void onCardClick(String json) {
         Intent intent = new Intent(this, InstructionsActivity.class);
-        intent.putExtra(InstructionsActivity.BUNDLE_JSON_RECIPE, json);
+        intent.putExtra(InstructionsActivity.EXTRA_JSON_RECIPE, json);
 
         startActivity(intent);
     }
