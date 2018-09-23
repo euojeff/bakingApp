@@ -1,11 +1,15 @@
 package com.jeffersonaraujo.bakingapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.jeffersonaraujo.bakingapp.database.AppDatabase;
+import com.jeffersonaraujo.bakingapp.database.RecipeEntry;
 import com.jeffersonaraujo.bakingapp.helper.RecipeJsonHelper;
 import com.jeffersonaraujo.bakingapp.helper.StepJsonHelper;
 
@@ -33,6 +37,26 @@ public class InstructionsActivity extends AppCompatActivity
 
     private Boolean isTablet = false;
 
+    private Context mContext;
+    private AppDatabase mDb;
+
+    private void updateWidget(String json){
+
+        new AsyncTask<RecipeEntry, Void, Void>(){
+            @Override
+            protected Void doInBackground(RecipeEntry... recipe) {
+                mDb.recipeDao().clean();
+                mDb.recipeDao().insertRecipe(recipe[0]);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                WidgetService.startActionUpdateWidget(mContext);
+            }
+        }.execute(new RecipeEntry(json));
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -45,15 +69,21 @@ public class InstructionsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructions);
 
+        mContext = this;
+        mDb = AppDatabase.getInstance(this);
+
         isTablet = getResources().getBoolean(R.bool.isTablet);
+        String recipeJson = getIntent().getStringExtra(BUNDLE_JSON_RECIPE);
 
         try {
-            mStepList = new RecipeJsonHelper(getIntent().getStringExtra(BUNDLE_JSON_RECIPE)).getSteps();
+            mStepList = new RecipeJsonHelper(recipeJson).getSteps();
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         if(savedInstanceState == null){
+
+            this.updateWidget(recipeJson);
 
             this.loadInstructionsFragment();
 

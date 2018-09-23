@@ -3,6 +3,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="title_activity_instruction_detail">InstructionDetailActivity</string>
-    <string name="appwidget_text">EXAMPLE</string>
+    <string name="appwidget_text">BAKING APP</string>
     <string name="add_widget">Add widget</string>
 </resources>

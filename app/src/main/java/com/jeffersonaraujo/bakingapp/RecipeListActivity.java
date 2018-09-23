@@ -1,12 +1,17 @@
 package com.jeffersonaraujo.bakingapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.GridLayout;
+
+import com.jeffersonaraujo.bakingapp.database.AppDatabase;
+import com.jeffersonaraujo.bakingapp.database.RecipeEntry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +34,10 @@ public class RecipeListActivity extends AppCompatActivity implements CardRecipeL
     @BindView(R.id.recycler_recipes)
     RecyclerView mRecyclerRecipes;
 
+    private AppDatabase mDb;
+
+    private Context mContext;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +45,9 @@ public class RecipeListActivity extends AppCompatActivity implements CardRecipeL
         setContentView(R.layout.activity_recipe_list);
 
         ButterKnife.bind(this);
+
+        mContext = this;
+        mDb = AppDatabase.getInstance(this);
 
         isTablet = getResources().getBoolean(R.bool.isTablet);
 
