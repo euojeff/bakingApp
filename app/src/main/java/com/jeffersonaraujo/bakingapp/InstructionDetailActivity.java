@@ -5,16 +5,31 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.jeffersonaraujo.bakingapp.helper.StepJsonHelper;
+
+import org.json.JSONException;
+
 public class InstructionDetailActivity extends AppCompatActivity
         implements InstructionDetailFragment.OnInstructionDetailInteractionListener {
 
     private Boolean mHasNext;
     private Boolean mHasPrevious;
 
+    private StepJsonHelper mStepHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instruction_detail);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        try {
+            mStepHelper = new StepJsonHelper(getIntent().getStringExtra(InstructionsActivity.EXTRA_JSON_STEP));
+            setTitle(mStepHelper.getShortDescription());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         if(savedInstanceState == null){
 
@@ -50,5 +65,11 @@ public class InstructionDetailActivity extends AppCompatActivity
             setResult(RESULT_OK, data);
             this.finish();
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }

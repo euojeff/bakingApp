@@ -33,6 +33,7 @@ public class InstructionsActivity extends AppCompatActivity
     public static String EXTRA_FROM_WIDGET = "FROM_WIDGET";
 
     private List<StepJsonHelper> mStepList = null;
+    private RecipeJsonHelper mRecipeHelper = null;
 
     private int mSelectedItem = -1;
 
@@ -73,6 +74,8 @@ public class InstructionsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructions);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mContext = this;
         mDb = AppDatabase.getInstance(this);
 
@@ -80,10 +83,13 @@ public class InstructionsActivity extends AppCompatActivity
         String recipeJson = getIntent().getStringExtra(EXTRA_JSON_RECIPE);
 
         try {
-            mStepList = new RecipeJsonHelper(recipeJson).getSteps();
+            mRecipeHelper =  new RecipeJsonHelper(recipeJson);
+            mStepList = mRecipeHelper.getSteps();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        setTitle(mRecipeHelper.getName());
 
         if(savedInstanceState == null){
 
@@ -168,6 +174,12 @@ public class InstructionsActivity extends AppCompatActivity
 
             }
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     @Override
