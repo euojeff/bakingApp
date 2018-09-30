@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.jeffersonaraujo.bakingapp.database.AppDatabase;
 import com.jeffersonaraujo.bakingapp.database.RecipeEntry;
+import com.jeffersonaraujo.bakingapp.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -92,7 +93,7 @@ public class RecipeListActivity extends AppCompatActivity implements CardRecipeL
             if(savedInstanceState == null){
                 InputStream is = getResources().openRawResource(R.raw.baking);
 
-                JSONArray mData = new JSONArray(this.inputStreamToString(is));
+                JSONArray mData = new JSONArray(Util.inputStreamToString(is));
 
                 mRecipes = new ArrayList<>();
                 for(int i = 0; i < mData.length(); i++){
@@ -106,11 +107,6 @@ public class RecipeListActivity extends AppCompatActivity implements CardRecipeL
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    private String inputStreamToString(InputStream is ){
-        Scanner s = new Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
     }
 
     @Override
