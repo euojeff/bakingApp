@@ -1,6 +1,8 @@
 package com.jeffersonaraujo.bakingapp;
 
 
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
@@ -14,11 +16,17 @@ import android.content.res.Resources;
 
 import com.jeffersonaraujo.bakingapp.util.Util;
 
+import org.hamcrest.core.IsNot;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.isInternal;
+import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
 public class RecipeListActivityTest{
@@ -27,6 +35,13 @@ public class RecipeListActivityTest{
     @Rule
     public IntentsTestRule<RecipeListActivity> activityTestRule =
             new IntentsTestRule<>(RecipeListActivity.class);
+
+    @Before
+    public void stubAllExternalIntents() {
+        // By default Espresso Intents does not stub any Intents. Stubbing needs to be setup before
+        // every test run. In this case all external Intents will be blocked.
+        intending(not(isInternal())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+    }
 
     @Test
     public void clickOnRecyclerViewItem_testInstructionDetailActivityIntent() throws JSONException {
